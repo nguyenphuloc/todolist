@@ -3,7 +3,6 @@ import * as todoService from '../services/todoService';
 import * as todoAction from '../actions/todoAction';
 import { sagaWrapper } from '../utils/common';
 
-
 const called: any = call;
 
 function* listTodo() {
@@ -21,19 +20,18 @@ function* createTodo() {
         todoAction.addTodoAction.toString(),
         sagaWrapper(function* (action: { payload: {}}): any  {
             yield called(todoService.createTodo, action.payload);
-            yield put(todoAction.listTodoAction())
+            // yield put(todoAction.listTodoAction())
         }, errorHandle(todoAction.todoFailure.toString())),
     )
 }
 
 function* updateTodo() {
-    
     yield takeLatest(
         todoAction.updateTodoAction.toString(),
         sagaWrapper(function* (action: any): any  {
+            console.log(action);
             yield called(todoService.updateTodo, action.payload);
-            yield put(todoAction.listTodoAction())
-            
+            action.payload.callback && action.payload.callback();
         }, errorHandle(todoAction.todoFailure.toString())),
     )
 }

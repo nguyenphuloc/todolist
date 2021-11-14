@@ -18,17 +18,15 @@ const Todo: FC = () => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
-
 	const [idTodo, setIdTodo] = useState<string | null>()
 
 	const handleClickAdd = () => {
-		navigate('/home');
+		navigate('/add');
 	}
-
 
 	const _handleAddTodo = ({ name }: { name: string}) => {
 		if (idTodo) {
-			dispatch(updateTodoAction({ name, _id: idTodo }));
+			// dispatch(updateTodoAction({ name, _id: idTodo }));
 			setIdTodo(null);
 		} else {
 			dispatch(addTodoAction({ name, isComplete: false }));
@@ -47,6 +45,9 @@ const Todo: FC = () => {
 
 	useEffect(() => {
 		dispatch(listTodoAction());
+		console.log('====================================');
+		console.log('list');
+		console.log('====================================');
 	}, [])
 
 	return (

@@ -1,7 +1,8 @@
 export interface ItemTodoState {
     _id?: string;
     name?: string;
-    isComplete?: boolean
+    isComplete?: boolean;
+    callback?: any
 }
 
 export type TodoState = {

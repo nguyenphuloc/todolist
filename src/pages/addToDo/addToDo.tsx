@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useAppDispatch } from '../../store/hooks';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import {
 	addTodoAction,
 	updateTodoAction,
 } from '../../actions/todoAction';
 
 
-export default function Home(){
+export default function AddToDo(){
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+	// const { id } = useParams();
 
     const [idTodo, setIdTodo] = useState<string | null>()
+
     const _handleAddTodo = ({ name }: { name: string}) => {
 		if (idTodo) {
-			dispatch(updateTodoAction({ name, _id: idTodo }));
+			// dispatch(updateTodoAction({ name, _id: id }, callback));
 			setIdTodo(null);
 		} else {
 			dispatch(addTodoAction({ name, isComplete: false }));

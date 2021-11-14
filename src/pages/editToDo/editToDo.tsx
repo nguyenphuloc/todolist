@@ -9,41 +9,31 @@ import {
 	updateTodoAction,
 	listTodoAction,
 } from '../../actions/todoAction';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 export default function EditToDo() {
     const [form] = Form.useForm();
 	const list = useAppSelector(listTodo);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+	const { id } = useParams();
 
     const [idTodo, setIdTodo] = useState<string | null>();
 
-    // const _handleAddTodo = ({ name }: { name: string}) => {
-	// 	if (idTodo) {
-	// 		dispatch(updateTodoAction({ name, _id: idTodo }));
-	// 		setIdTodo(null);
-	// 	} else {
-	// 		dispatch(addTodoAction({ name, isComplete: false }));
-	// 	}
-	// 	form.resetFields();
-        
-	// }
-
-    const _handleEditTodo = (id: string | undefined) => {
-        const { name } = list.find((item) => item._id === id) || {};
-        form.setFieldsValue({
-            name
-        });
-        setIdTodo(id);
-    }
-
-    const handleClickHome = () => {
+    const callback = () => {
         navigate('/', {replace: true});
-    }
+	}
+
+    const _handleAddTodo = ({ name }: { name: string}) => {
+		dispatch(updateTodoAction({ name, _id: id }, callback));
+		setIdTodo(null);
+		form.resetFields();
+        
+	}
+
     return(
         <div>
-            <Form form={form} name="horizontal" layout="inline" className="form">
+            <Form form={form} name="horizontal" layout="inline" className="form" onFinish={_handleAddTodo}>
 				<Form.Item
 					name="name"
 					rules={[{ required: true, message: 'Please input your username!' }]}
@@ -60,19 +50,12 @@ export default function EditToDo() {
 								!form.isFieldsTouched(true) ||
 								!!form.getFieldsError().filter(({ errors }) => errors.length).length
 							}
-                            onClick={handleClickHome}
 						>
 							{ idTodo ? "Edit" : "Add" }
 						</Button>
 					)}
 				</Form.Item>
 			</Form>
-            {(list || [])?.map((item, idx) => (
-					<div key={idx} className="listItem">
-						<span>{item.name}</span>
-                        <EditOutlined className="icon" onClick={() => _handleEditTodo(item._id)} />
-                    </div>
-            ))}
         </div>
     )
 }
