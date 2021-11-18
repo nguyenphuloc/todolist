@@ -1,0 +1,37 @@
+.todoContainer {
+    width: 500px;
+    height: 800px;
+    margin: auto;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 0 3px;
+    padding: 1rem;
+    
+    color: #ffffff;
+    .list {
+      width: 420px;
+      margin: auto;
+      margin-top: 4rem;
+      height: 575px;
+      overflow: auto;
+      .listItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        box-shadow: 0px 4px 0px -3px;
+        margin: none;
+        .listItemButton {
+          padding: none;
+          .btnIcon {
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+  }
+  
+  
+  
+  
+
+  

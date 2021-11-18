@@ -8,4 +8,7 @@ export interface ItemTodoState {
 export type TodoState = {
     listTodo: ItemTodoState[];
     status: 'idle' | 'loading' | 'failed';
+    getDetail: {
+        name?: string
+    }
 }

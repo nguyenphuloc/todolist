@@ -18,9 +18,9 @@ function* listTodo() {
 function* createTodo() {
     yield takeLatest(
         todoAction.addTodoAction.toString(),
-        sagaWrapper(function* (action: { payload: {}}): any  {
+        sagaWrapper(function* (action: any): any  {
             yield called(todoService.createTodo, action.payload);
-            // yield put(todoAction.listTodoAction())
+            action.payload.callback && action.payload.callback();
         }, errorHandle(todoAction.todoFailure.toString())),
     )
 }
@@ -32,6 +32,16 @@ function* updateTodo() {
             console.log(action);
             yield called(todoService.updateTodo, action.payload);
             action.payload.callback && action.payload.callback();
+        }, errorHandle(todoAction.todoFailure.toString())),
+    )
+}
+
+function* getByIdTodo() {
+    yield takeLatest(
+        todoAction.getTodoAction.toString(),
+        sagaWrapper(function* (action: any): any  {
+            const result = yield called(todoService.getTodo, action.payload);
+            yield put(todoAction.getTodoSuccess(result))
         }, errorHandle(todoAction.todoFailure.toString())),
     )
 }
@@ -56,5 +66,6 @@ export default function* generalSaga() {
         fork(createTodo),
         fork(updateTodo),
         fork(deleteTodo),
+        fork(getByIdTodo),
     ])
 }

@@ -1,57 +1,60 @@
-import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
-import { useAppDispatch } from '../../store/hooks';
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './styles.module.scss';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useNavigate, useParams } from 'react-router';
+import { listTodo, getDetailTodo } from '../../reducers/todoReducer';
 import {
 	addTodoAction,
 	updateTodoAction,
+	getTodoAction
 } from '../../actions/todoAction';
+
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 export default function AddToDo(){
-    const [form] = Form.useForm();
+    const inputRef = useRef<HTMLInputElement | undefined>(null);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-	// const { id } = useParams();
+	const list = useAppSelector(listTodo);
+	const { id } = useParams();
+
 
     const [idTodo, setIdTodo] = useState<string | null>()
 
-    const _handleAddTodo = ({ name }: { name: string}) => {
-		if (idTodo) {
-			// dispatch(updateTodoAction({ name, _id: id }, callback));
-			setIdTodo(null);
-		} else {
-			dispatch(addTodoAction({ name, isComplete: false }));
-		}
-		form.resetFields();
-        navigate('/', {replace: true});
+	const callback = () => {
+		navigate(-1);
 	}
 
+	
+
+    const _handleAddTodo = () => {
+		const name: any = inputRef.current;
+		console.log(name);
+		dispatch(addTodoAction({ name: name.value, isComplete: false, callback }))
+		setIdTodo(null);
+	}
+	// <FormControl form={form} name="horizontal" layout="inline" onFinish={_handleAddTodo} className="form">
     return(
-        <div className="page-home">
-            <Form form={form} name="horizontal" layout="inline" onFinish={_handleAddTodo} className="form">
-				<Form.Item
+        <div className={styles.pageAdd}>
+            <form className={styles.formName}>
+				<TextField 
+					inputRef={inputRef}
+					className={styles.textName}
+					id="outlined-basic" 
+					label="Fill in this field" 
+					variant="outlined"
 					name="name"
-					rules={[{ required: true, message: 'Please input your username!' }]}
+				/>
+				<Button
+					className="button"
+					variant='contained'
+					onClick={_handleAddTodo}						
 				>
-					<Input size="large" placeholder="Text" className="input" />
-				</Form.Item>
-				<Form.Item shouldUpdate>
-					{() => (
-						<Button
-							type="primary"
-							htmlType="submit"
-							className="button"
-							disabled={
-								!form.isFieldsTouched(true) ||
-								!!form.getFieldsError().filter(({ errors }) => errors.length).length
-							}
-						>
-							{ idTodo ? "Edit" : "Add" }
-						</Button>
-					)}
-				</Form.Item>
-			</Form>
+					Add
+				</Button>
+			</form>
         </div>
     )
 }

@@ -5,6 +5,10 @@ export const getAllTodo = async() => {
     return data.data;
 }
 
+export const getTodo = (data: any) => {
+    return ApiService.get(`/todo/${data._id}`)
+}
+
 export const createTodo = (data: {}) => {
     return ApiService.post('/todo', {...data})
 }

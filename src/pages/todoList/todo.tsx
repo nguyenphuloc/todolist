@@ -1,6 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Form, Input, Button } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, { FC, useEffect, useState, useRef } from 'react';
+import { Form, Input } from 'antd';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { listTodo } from '../../reducers/todoReducer';
 import {
@@ -9,11 +8,23 @@ import {
 	updateTodoAction,
 	listTodoAction,
 } from '../../actions/todoAction';
-import styles from './todo.module.css';
+import styles from './todo.module.scss';
 import { useNavigate } from 'react-router';
 
+import Button from '@mui/material/Button';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+
+
 const Todo: FC = () => {
-	const [form] = Form.useForm();
+	const inputRef = useRef<HTMLInputElement | undefined>(null);
 	const list = useAppSelector(listTodo);
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
@@ -24,50 +35,58 @@ const Todo: FC = () => {
 		navigate('/add');
 	}
 
-	const _handleAddTodo = ({ name }: { name: string}) => {
-		if (idTodo) {
-			// dispatch(updateTodoAction({ name, _id: idTodo }));
-			setIdTodo(null);
-		} else {
-			dispatch(addTodoAction({ name, isComplete: false }));
-		}
-		form.resetFields();
-	}
-
 	const _handleEditTodo = (id: string | undefined) => {
-		const { name } = list.find((item) => item._id === id) || {};
-		form.setFieldsValue({
-			name
-		});
+		const { name: any } = list.find((item) => item._id === id) || {};
+		if (inputRef.current) {
+			inputRef.current.value = "abcxyz";
+		  }
 		setIdTodo(id);
 		navigate(`/edit/${id}`);
 	}
 
 	useEffect(() => {
 		dispatch(listTodoAction());
-		console.log('====================================');
 		console.log('list');
-		console.log('====================================');
 	}, [])
 
 	return (
 		<div className={styles.todoContainer}>
 			<h1>TodoList</h1>
-			<button
+			<Button
+				variant='contained'
 				onClick={handleClickAdd}
 			>
+				<AddRoundedIcon />
 				Add
-			</button>
+			</Button>
 			<div className={styles.list}>
-				{(list || [])?.map((item, idx) => (
-					<div key={idx} className={styles.listItem}>
-						<span>{item.name}</span>
-						<span>
-							<EditOutlined className={styles.iconEdit} onClick={() => _handleEditTodo(item._id)} />
-							<DeleteOutlined onClick={() => dispatch(deleteTodoAction({_id: item._id}))} />
-						</span>
-					</div>
-				))}
+				<Box
+      				sx={{ width: '100%', maxWidth: 420 }}
+    			>
+					<List sx={{ width: '100%', maxWidth: 420}}>
+						{(list || [])?.map((item, idx) => (
+        				<ListItem key={idx} className={styles.listItem} component="div" disablePadding>
+      						<ListItemButton className={styles.listItemButton}>
+        						<ListItemText primary={item.name} />
+								<span>
+									<Button
+										className={styles.btnIcon}
+										variant='contained'
+									>
+										<EditRoundedIcon onClick={() => _handleEditTodo(item._id)} />
+									</Button>
+									<Button
+										className={styles.btnIcon}
+										variant='contained'
+									>
+										<DeleteRoundedIcon onClick={() => dispatch(deleteTodoAction({_id: item._id}))} />
+									</Button>
+								</span>	
+      						</ListItemButton>
+    					</ListItem>
+						))}
+					</List>
+    			</Box>
 			</div>
 		</div>
 	);
