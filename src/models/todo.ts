@@ -1,6 +1,6 @@
 export interface ItemTodoState {
     _id?: string;
-    name?: string;
+    name?: string | null;
     isComplete?: boolean;
     callback?: any
 }

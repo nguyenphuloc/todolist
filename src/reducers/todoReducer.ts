@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { RootState } from '../../src/store/store';
 import { TodoState } from '../models/todo';
 import { listTodoSuccess, getTodoSuccess } from '../actions/todoAction';

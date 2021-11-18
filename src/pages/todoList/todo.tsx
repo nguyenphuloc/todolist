@@ -1,15 +1,6 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
-import { Form, Input } from 'antd';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { listTodo } from '../../reducers/todoReducer';
-import {
-	addTodoAction,
-	deleteTodoAction,
-	updateTodoAction,
-	listTodoAction,
-} from '../../actions/todoAction';
-import styles from './todo.module.scss';
 import { useNavigate } from 'react-router';
+import styles from './todo.module.scss';
 
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -22,6 +13,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { listTodo } from '../../reducers/todoReducer';
+import { deleteTodoAction, listTodoAction } from '../../actions/todoAction';
 
 const Todo: FC = () => {
 	const inputRef = useRef<HTMLInputElement | undefined>(null);
@@ -37,9 +31,6 @@ const Todo: FC = () => {
 
 	const _handleEditTodo = (id: string | undefined) => {
 		const { name: any } = list.find((item) => item._id === id) || {};
-		if (inputRef.current) {
-			inputRef.current.value = "abcxyz";
-		  }
 		setIdTodo(id);
 		navigate(`/edit/${id}`);
 	}
